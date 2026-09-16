@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Node {
+  id            Int      @id @default(autoincrement())
+  nodeCode      String   @unique
+  locationName  String
+  latitude      Float
+  longitude     Float
+  status        String   @default("OFFLINE")
+  lastHeartbeat DateTime?
+  createdAt     DateTime @default(now())
+
+  readings      TrafficReading[]
+  alerts        Alert[]
+
+  @@index([status])
+}
+
+model TrafficReading {
+  id            Int      @id @default(autoincrement())
+  nodeId        Int
+  node          Node     @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  vehicleCount  Int
+  averageSpeed  Float
+  density       String
+  trafficStatus String
+  recordedAt    DateTime @default(now())
+
+  @@index([nodeId])
+  @@index([recordedAt])
+  @@index([trafficStatus])
+}
+
+model Alert {
+  id           Int       @id @default(autoincrement())
+  nodeId       Int
+  node         Node      @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  locationName String
+  alertType    String
+  severity     String
+  message      String
+  resolved     Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  resolvedAt   DateTime?
+
+  @@index([resolved])
+  @@index([nodeId])
+  @@index([severity])
+}
