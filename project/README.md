@@ -1,7 +1,5 @@
 # TRAFFICWATCH — Distributed Traffic Monitoring System
 
-**Group 19 — Distributed Computing Project**
-
 A real-time distributed traffic monitoring system where four independent monitoring nodes collect traffic data and report to a central server via REST APIs. The server stores data in SQLite and a React dashboard visualizes everything live.
 
 ---
